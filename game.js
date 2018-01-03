@@ -1,6 +1,7 @@
 var canvas = document.getElementById("cv");
 var context = canvas.getContext("2d");
 
+
 // affiche la glace (le sol) sur tout le canvas
 var drawIce = function () {
     for(var j=0;j<16;j++)
@@ -43,7 +44,7 @@ var popUpTroopers = function(troopers){
 	},2000);
 }
 
-//actualise l'affichage des troopers (effece donc les tieFighters)
+//actualise l'affichage des troopers (efface donc les tieFighters)
 var refreshTroopers = function(troopers){
 	drawIce();
 	for (var i=0;i<troopers.length;i++){
@@ -66,7 +67,8 @@ function littleMoveDown(troopers){
 	var fonc = setInterval(function(){
 		console.log(troopers);
 		animationTrooper(troopers[i]);
-		refreshTroopers(troopers);	
+		refreshTroopers(troopers);
+		
 		troopers[i]["y"]=troopers[i]["y"]+2/16;
 		//je ne sais pas pourquoi mais l'opération ci dessus 
 		// est répétée 16 fois par Interval, d'où "/16"
@@ -75,6 +77,7 @@ function littleMoveDown(troopers){
 		if (i==troopers.length){
 			i=0;
 		}
+
 		
 	},60); 
 }
@@ -107,6 +110,42 @@ function Trooper (x, y){
 	this.sx=0;
 }
 
+
+// Gestion du curseur et du click
+// Evenement à supprimer quand le jeu fonctionnera
+//$(canvas).click(function() {
+//    alert("Vous m'avez cliqué !");
+//});
+
+// Test pour trouver où se situe la souris
+document.addEventListener('mousemove', function(e) {
+    cv.innerHTML = 'Position X : ' + e.clientX + 'px<br />Position Y : ' + e.clientY + 'px';
+});
+
+// Affiche une alerte lorsqu'on est sur le canvas
+//$(cv).mousemove(function(event) {
+//  alert("Vous êtes sur le canvas");
+//});
+//Affiche les coordonnées du canvas lorsqu'on rentre dessus.
+//$(canvas).mousemove(function(ev){
+//	$("body").text("( ev.clientX, ev.clientY ) : ( " + ev.pageX + ", " + ev.pageY + " )");
+//});
+
+// Cliquer sur un trooper
+function alertTrooper(troopers){
+	if(troopers[0]["y"] >= 49){
+		alert(troopers[0].y);
+	};
+};
+
+
+
+
+
+
+
+//Colision entre la souris et le trooper.
+
 //------------DEBUT DU JEU---------------------------------------
 //---------------------------------------------------------------
 
@@ -130,7 +169,6 @@ setTimeout(function(){
 //Fonction principale du jeu
 function startGame(){
 	drawIce();
-
 	//déclaration d'une array qui va contenir tous les troopers avec
 	//leur tieFighter
 	//TO DO : gérer un popUp avec des coordonnees random x,y
@@ -138,5 +176,8 @@ function startGame(){
 	var troopers = [new Trooper(0,0), new Trooper(50,50), new Trooper(340,20), new Trooper(160,0)];
 	
 	//popUp de la liste des troopers ci dessus.
+	
 	popUpTroopers(troopers);
+	alertTrooper(troopers);
+
 }

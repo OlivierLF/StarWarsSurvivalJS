@@ -1,5 +1,6 @@
 var canvas = document.getElementById("cv");
 var context = canvas.getContext("2d");
+var context2 = canvas.getContext("2d");
 
 
 // affiche la glace (le sol) sur tout le canvas
@@ -39,9 +40,10 @@ var popUpTroopers = function(troopers){
 	setTimeout(function(){
 		for (var j=0;j<troopers.length;j++){
 			refreshTroopers(troopers);
-			trooperMovement(troopers);	
+			troopers=trooperMovement(troopers);	
 		}
 	},2000);
+	return troopers;
 }
 
 //actualise l'affichage des troopers (efface donc les tieFighters)
@@ -56,16 +58,19 @@ var refreshTroopers = function(troopers){
 //gère l'affichage des troopers en cours de mouvement
 var trooperMovement= function(troopers){
 	for (var i=0;i<troopers.length;i++){
-		littleMoveDown(troopers);
+		troopers=littleMoveDown(troopers);
 		refreshTroopers(troopers);
+		console.log("troop"+ troopers[1]["y"]);
 	}
+	return troopers;
+
 }
 
 //fonction pour changer la coordonnée y des troopers
 function littleMoveDown(troopers){
 	var i =0;
 	var fonc = setInterval(function(){
-		console.log(troopers);
+		//console.log(troopers);
 		animationTrooper(troopers[i]);
 		refreshTroopers(troopers);
 		
@@ -79,7 +84,8 @@ function littleMoveDown(troopers){
 		}
 
 		
-	},60); 
+	},40);
+	return troopers; 
 }
 
 //fonction stop pour arrêter le setInterval et regarder
@@ -118,9 +124,9 @@ function Trooper (x, y){
 //});
 
 // Test pour trouver où se situe la souris
-document.addEventListener('mousemove', function(e) {
-    cv.innerHTML = 'Position X : ' + e.clientX + 'px<br />Position Y : ' + e.clientY + 'px';
-});
+//document.addEventListener('mousemove', function(e) {
+//    cv.innerHTML = 'Position X : ' + e.clientX + 'px<br />Position Y : ' + e.clientY + 'px';
+//});
 
 // Affiche une alerte lorsqu'on est sur le canvas
 //$(cv).mousemove(function(event) {
@@ -133,18 +139,44 @@ document.addEventListener('mousemove', function(e) {
 
 // Cliquer sur un trooper
 function alertTrooper(troopers){
-	if(troopers[0]["y"] >= 49){
-		alert(troopers[0].y);
+	//console.log("o")
+	if(troopers[0]["y"] >= 5){
+		//console.log("ok");
+		console.log(troopers[0].y);
 	};
 };
 
+//Test pour trouver où se situe la souris sur le canvas
+var position = document.addEventListener('mousemove', function(event) { 
+   //context2.clearRect(0,0,canvas.width,canvas.height); // efface le cadre 2
+   var XYrect = canvas.getBoundingClientRect();    // action avec le canvas et pas le context
+   var Xcurseur = Math.round(event.clientX - XYrect.left); 
+   var Ycurseur = Math.round(event.clientY - XYrect.top);
+   cv.innerHTML = 'Position X : ' + this.Xcurseur + 'px<br />Position Y : ' + this.Ycurseur + 'px';
+   
+   // Pour afficher le résultat sur le canvas
+   //context2.fillStyle = "white";
+   //context2.globalCompositeOperation = "destination-over";
+   //context2.fillText("Position de la souris",10, 35);
+   //context2.fillText("X="+Xcurseur, 70, 70);
+   //context2.fillText("Y="+Ycurseur, 70, 105);
+}); 
 
 
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//je veux récupérer les variables Xcurseur et Ycurseur mais je n'y arrive pas
 //Colision entre la souris et le trooper.
+document.addEventListener('mousemove', function viser(position){
+
+	if (position.Xcurseur >= 0 && postion.Xcurseur <= 600 && postion.Ycurseur >= 0 && postion.Ycurseur <= 800){
+		//for (var i = 0; i< troopList.length; i++){
+		//	if( troopList[i]["x"] >= (this.Xcurseur - 22) && troopList[i]["x"] <= (this.Xcurseur + 22) && troopList[i]["y"] >= (this.Ycurseur - 11) && troopList[i]["y"] <= (this.Xcurseur + 11)){
+				alert("Dans la ligne de mire");
+		//	}
+		//}
+	}
+});
+
 
 //------------DEBUT DU JEU---------------------------------------
 //---------------------------------------------------------------
@@ -173,11 +205,18 @@ function startGame(){
 	//leur tieFighter
 	//TO DO : gérer un popUp avec des coordonnees random x,y
 	//et à intervalle de temps régulier (cf consignes)
-	var troopers = [new Trooper(0,0), new Trooper(50,50), new Trooper(340,20), new Trooper(160,0)];
+	var trooper1=new Trooper(0,0);
+	var trooper2=new Trooper(50,50);
+	var trooper3=new Trooper(160,0);
+	var trooper4=new Trooper(340,20);
+	var troopList = [trooper1, trooper2, trooper3 ,trooper4];
 	
 	//popUp de la liste des troopers ci dessus.
 	
-	popUpTroopers(troopers);
-	alertTrooper(troopers);
+	troopList=popUpTroopers(troopList);
+	setInterval(function(){
+		alertTrooper(troopList);
+	},1000);
+
 
 }

@@ -25,75 +25,43 @@ var drawTrooper = function(trooper){
 var drawTieFighter = function(trooper){
 	var tie = new Image();
 	tie.src="tieFighter.png";
-	context.drawImage(tie,0,0,810,984,trooper["x"],trooper["y"],50,50);
+	context.drawImage(tie,0,0,810,984,trooper["tieFighterX"],trooper["tieFighterY"],50,50);
 };
+
 
 //fait appraître les tieFighters (immobiles). Au bout de deux 
 //secondes les tieFighters disparaissent et les troopers 
 //apparaissent et avancent.
 var popUpTroopers = function(troopers){
-
-	for(var i=0;i<troopers.length;i++){
-		drawTieFighter(troopers[i]);
-		drawTrooper(troopers[i]);
-	}
+	setInterval(function(){
+			var x=Math.floor(Math.random() * 551);
+			var y=Math.floor(Math.random() * 101);
+			var troop=new Trooper(x,y);
+			troopers.push(troop);
+			//drawTieFighter(troop);
+			drawTrooper(troop);
+			setTimeout(function(){
+				context.drawImage(ice,0,0,64,64,troop["x"],troop["y"],50,50);
+				drawTrooper(troop);
+			},1000);
+	},2000);
 	setTimeout(function(){
-		for (var j=0;j<troopers.length;j++){
-			refreshTroopers(troopers);
-			troopers=trooperMovement(troopers);	
-		}
+		setInterval(function(){
+		troopers.forEach(function(trooper){
+			trooper["y"]=trooper["y"]+5;
+			context.clearRect(0,0,600,800);
+			drawIce();
+			drawTieFighter(trooper);
+			for (var i=0;i<troopers.length;i++){
+				drawTrooper(troopers[i]);
+			}
+			animationTrooper(trooper);
+			});
+		},100);
 	},2000);
 	return troopers;
 }
 
-//actualise l'affichage des troopers (efface donc les tieFighters)
-var refreshTroopers = function(troopers){
-	drawIce();
-	for (var i=0;i<troopers.length;i++){
-		drawTrooper(troopers[i]);
-	}
-
-}
-
-//gère l'affichage des troopers en cours de mouvement
-var trooperMovement= function(troopers){
-	for (var i=0;i<troopers.length;i++){
-		troopers=littleMoveDown(troopers);
-		refreshTroopers(troopers);
-		console.log("troop"+ troopers[1]["y"]);
-	}
-	return troopers;
-
-}
-
-//fonction pour changer la coordonnée y des troopers
-function littleMoveDown(troopers){
-	var i =0;
-	var fonc = setInterval(function(){
-		//console.log(troopers);
-		animationTrooper(troopers[i]);
-		refreshTroopers(troopers);
-		
-		troopers[i]["y"]=troopers[i]["y"]+2/16;
-		//je ne sais pas pourquoi mais l'opération ci dessus 
-		// est répétée 16 fois par Interval, d'où "/16"
-		//"2" correspond donc au nb de pixel de descente
-		i++;	
-		if (i==troopers.length){
-			i=0;
-		}
-
-		
-	},40);
-	return troopers; 
-}
-
-//fonction stop pour arrêter le setInterval et regarder
-//ce qu'il s'y passe dans al console
-//écrire dans le setInterval dans le cas au dessus: stop(fonc);
-function stop (fonc){
-	clearInterval(fonc);
-}
 
 //gère le choix de l'image du trooper pour faire l'animation
 function animationTrooper(trooper){
@@ -114,7 +82,11 @@ function Trooper (x, y){
 	this.x=x;
 	this.y=y;
 	this.sx=0;
+	this.tieFighterX=x;
+	this.tieFighterY=y;
+	this.hp=1;
 }
+
 
 
 // Gestion du curseur et du click
@@ -203,20 +175,11 @@ function startGame(){
 	drawIce();
 	//déclaration d'une array qui va contenir tous les troopers avec
 	//leur tieFighter
-	//TO DO : gérer un popUp avec des coordonnees random x,y
-	//et à intervalle de temps régulier (cf consignes)
-	var trooper1=new Trooper(0,0);
-	var trooper2=new Trooper(50,50);
-	var trooper3=new Trooper(160,0);
-	var trooper4=new Trooper(340,20);
-	var troopList = [trooper1, trooper2, trooper3 ,trooper4];
-	
+	troopList=[]
 	//popUp de la liste des troopers ci dessus.
-	
 	troopList=popUpTroopers(troopList);
-	setInterval(function(){
-		alertTrooper(troopList);
-	},1000);
+
+	
 
 
 }

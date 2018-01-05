@@ -30,6 +30,10 @@ var drawUnits = function(units){
 			drawDestroyer(unit);
 			drawVador(unit);
 		}
+		if (unit.type=="droid" ){
+			drawMultiTroop(unit);
+			drawDroid(unit);
+		}
 	});
 }
 //affiche le trooper passé en paramètre aux coordonnées qui lui sont propres 
@@ -49,6 +53,12 @@ var drawVador = function(vador){
 var drawJedi = function(jedi){
 	context.drawImage(jedi["imJedi"],jedi["sx"],jedi["sy"],185,180,jedi["x"],jedi["y"]+10,60,60);
 };
+//affiche un droid passé en paramètre aux coordonnées qui lui sont propres 
+//lors de sa déclaration
+var drawDroid = function(droid){
+	context.drawImage(droid["imDroid"],droid["sx"],droid["sy"],185,180,droid["x"],droid["y"]+10,40,40);
+};
+
 
 
 
@@ -69,6 +79,11 @@ var drawXwing = function(jedi){
 	context.drawImage(jedi["imXwing"],0,0,604,450,jedi["xwingX"],jedi["xwingY"]-20,60,60);
 };
 
+//affiche le vehicule multiTroop associé au droid passé en paramètre aux coordonnées
+// qui lui sont propres lors de sa déclaration
+var drawMultiTroop = function(droid){
+	context.drawImage(droid["imMultiTroop"],0,0,459,279,droid["multiTroopX"],droid["multiTroopY"]-20,50,50);
+};
 
 //fait appraître les tieFighters (immobiles). Au bout d'une 
 //seconde le tieFighter disparait et le trooper avance.
@@ -84,6 +99,18 @@ var popUp = function(units){
 		vador["imDestroyer"].src="ice.jpg";
 	},5000);
 	
+	//popUpDroids
+	setInterval(function(){
+			var xDroid=Math.floor(Math.random() * 551);
+			var yDroid=Math.floor(Math.random() * 101);
+			var droid=new Droid(xDroid,yDroid);
+			units.push(droid);
+			drawMultiTroop(droid)
+			drawDroid(droid);
+			setTimeout(function(){
+				droid["imMultiTroop"].src="ice.jpg";
+		},1500);
+	},1800);
 
 	//popUpTroopers
 	setInterval(function(){
@@ -95,8 +122,8 @@ var popUp = function(units){
 			drawTrooper(troop);
 			setTimeout(function(){
 				troop["imTieFighter"].src="ice.jpg";
-			},1500);
-		},2000);
+		},1500);
+	},2200);
 
 	//popUpJedis
 	setInterval(function(){
@@ -108,7 +135,7 @@ var popUp = function(units){
 			drawJedi(jedi);
 			setTimeout(function(){
 				jedi["imXwing"].src="ice.jpg";
-			},2000);
+		},2000);
 	},3000);
 
 	//refresh toutes les 0.1s
@@ -128,10 +155,16 @@ var popUp = function(units){
 					animationJedi(unit);
 				}
 				if (unit.type=="trooper"){
-					unit["y"]=unit["y"]+5;
+					unit["y"]=unit["y"]+4;
 					drawTieFighter(unit);
 					drawTrooper(unit)
 					animationTrooper(unit);
+				}
+				if (unit.type=="droid"){
+					unit["y"]=unit["y"]+5;
+					drawMultiTroop(unit);
+					drawDroid(unit);
+					animationDroid(unit);
 				}
 			})
 			drawIce();
@@ -174,6 +207,13 @@ function animationJedi(jedi){
 	jedi["sx"]+=185;
 }
 
+function animationDroid(droid){
+	if (droid["sx"]==600){
+		droid["sx"]=-150;
+	}
+	droid["sx"]+=150;
+}
+
 function deleteUnit(units){
 	setInterval(function(){
 		var i=0;
@@ -204,12 +244,14 @@ function Trooper (x, y){
 	this["imDestroyer"].src="destroyer.png";
 	this.imXwing=new Image();
 	this["imXwing"].src="xwing.png";
+	this.imMultiTroop=new Image();
+	this["imMultiTroop"].src="multiTroop.png";
 	this.x=x;
 	this.y=y;
 	this.sx=0;
 	this.tieFighterX=x;
 	this.tieFighterY=y;
-	this.hp=1;
+	this.hp=2;
 }
 
 //Constructeur de l'objet Vador. Ses paramètres (x,y) sont les 
@@ -222,12 +264,16 @@ function Vador (x, y){
 	this["imVador"].src="vador.png";
 	this.imJedi=new Image();
 	this["imJedi"].src="jedi.png";
+	this.imDroid=new Image();
+	this["imDroid"].src="droid.png"
 	this.imTieFighter=new Image();
 	this["imTieFighter"].src="tieFighter.png";
 	this.imDestroyer= new Image();
 	this["imDestroyer"].src="destroyer.png";
 	this.imXwing=new Image();
 	this["imXwing"].src="xwing.png";
+	this.imMultiTroop=new Image();
+	this["imMultiTroop"].src="multiTroop.png";
 	this.x=x;
 	this.y=y;
 	this.sx=0;
@@ -248,19 +294,51 @@ function Jedi (x, y){
 	this["imVador"].src="vador.png";
 	this.imJedi=new Image();
 	this["imJedi"].src="jedi.png";
+	this.imDroid=new Image();
+	this["imDroid"].src="droid.png"
 	this.imTieFighter=new Image();
 	this["imTieFighter"].src="tieFighter.png";
 	this.imDestroyer= new Image();
 	this["imDestroyer"].src="destroyer.png";
 	this.imXwing=new Image();
 	this["imXwing"].src="xwing.png";
+	this.imMultiTroop=new Image();
+	this["imMultiTroop"].src="multiTroop.png";
 	this.x=x;
 	this.y=y;
 	this.sx=0;
 	this.sy=380;
 	this.xwingX=x;
 	this.xwingY=y;
-	this.hp=25;
+	this.hp=10;
+	this.frame=0;
+}
+
+function Droid (x, y){
+	this.type="droid";
+	this.imTrooper=new Image();
+	this["imTrooper"].src="trooper.png";
+	this.imVador=new Image();
+	this["imVador"].src="vador.png";
+	this.imJedi=new Image();
+	this["imJedi"].src="jedi.png";
+	this.imDroid=new Image();
+	this["imDroid"].src="droid.png"
+	this.imTieFighter=new Image();
+	this["imTieFighter"].src="tieFighter.png";
+	this.imDestroyer= new Image();
+	this["imDestroyer"].src="destroyer.png";
+	this.imXwing=new Image();
+	this["imXwing"].src="xwing.png";
+	this.imMultiTroop=new Image();
+	this["imMultiTroop"].src="multiTroop.png";
+	this.x=x;
+	this.y=y;
+	this.sx=0;
+	this.sy=0;
+	this.multiTroopX=x;
+	this.multiTroopY=y;
+	this.hp=1;
 	this.frame=0;
 }
 
@@ -334,23 +412,6 @@ document.addEventListener('mousemove', function viser(position){
 var ice=new Image();//déclaration de l'image du sol
 ice.src="ice.jpg";
 
-var trooper=new Image();//déclaration du sprite du trooper
-trooper.src="trooper.png";
-
-var tie = new Image();//déclaration de l'image du tieFighter
-tie.src="tieFighter.png";
-
-var vador=new Image();//déclaration du sprite de Vador
-vador.src="vador.png";
-
-var destroyer = new Image();//déclaration de l'image du destroyer
-destroyer.src="destroyer.png";
-
-var jedi=new Image();//déclaration du sprite du jedi
-jedi.src="jedi.png";
-
-var xwing = new Image();//déclaration de l'image du X-Wing
-xwing.src="xwing.png";
 
 //démarrage du jeu après 0,5s pour prendre le temps de charger les images
 setTimeout(function(){

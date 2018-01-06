@@ -228,7 +228,8 @@ function deleteUnit(units){
 	
 
 
-//Constructeur de l'objet Trooper. Ses paramètres (x,y) sont les 
+
+//Constructeur de l'objet trooper. Ses paramètres (x,y) sont les 
 //coordonnées de son coin supérieur gauche. sx permet de gérer l'animation
 function Trooper (x, y){
 	this.type="trooper";
@@ -373,36 +374,55 @@ function alertTrooper(troopers){
 	};
 };
 
-//Test pour trouver où se situe la souris sur le canvas
-var position = document.addEventListener('mousemove', function(event) { 
-   //context2.clearRect(0,0,canvas.width,canvas.height); // efface le cadre 2
-   var XYrect = canvas.getBoundingClientRect();    // action avec le canvas et pas le context
-   var Xcurseur = Math.round(event.clientX - XYrect.left); 
-   var Ycurseur = Math.round(event.clientY - XYrect.top);
-   cv.innerHTML = 'Position X : ' + this.Xcurseur + 'px<br />Position Y : ' + this.Ycurseur + 'px';
-   
-   // Pour afficher le résultat sur le canvas
-   //context2.fillStyle = "white";
-   //context2.globalCompositeOperation = "destination-over";
-   //context2.fillText("Position de la souris",10, 35);
-   //context2.fillText("X="+Xcurseur, 70, 70);
-   //context2.fillText("Y="+Ycurseur, 70, 105);
-}); 
+//Retrouner la position X et Y du curseur
+var Xcurseur = 0;
+var Ycurseur = 0;
+document.onclick = position;
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//je veux récupérer les variables Xcurseur et Ycurseur mais je n'y arrive pas
-//Colision entre la souris et le trooper.
-document.addEventListener('mousemove', function viser(position){
-
-	if (position.Xcurseur >= 0 && postion.Xcurseur <= 600 && postion.Ycurseur >= 0 && postion.Ycurseur <= 800){
-		//for (var i = 0; i< troopList.length; i++){
-		//	if( troopList[i]["x"] >= (this.Xcurseur - 22) && troopList[i]["x"] <= (this.Xcurseur + 22) && troopList[i]["y"] >= (this.Ycurseur - 11) && troopList[i]["y"] <= (this.Xcurseur + 11)){
-				alert("Dans la ligne de mire");
-		//	}
-		//}
+function position (evt) {
+	var XYrect = canvas.getBoundingClientRect(); 
+  	if (navigator.appName=="Microsoft Internet Explorer") {
+		Xcurseur = event.x + document.body.scrollLeft - XYrect.left;
+  		Ycurseur = event.y + document.body.scrollTop - XYrect.top;
+  	}else {
+		if(!evt) evt = window.event;    
+		Xcurseur = evt.clientX - XYrect.left;
+   		Ycurseur = evt.clientY - XYrect.top;
 	}
-});
+	fShowTable();
+	CollisionTrooper(Xcurseur,Ycurseur,troopList);
+};
+
+// Affichage de la position sur la console
+function fShowTable() {
+	console.log('x= '+ Xcurseur +' ,y= '+ Ycurseur);
+};
+
+
+
+//Test pour savoir s'il y a collision entre le curseur et un trooper
+function CollisionTrooper(Xcurseur, Ycurseur, troopers){
+	for(var i = 0; i < troopers.length ; i++){
+		if ((troopers[i].x <= Xcurseur + 22) && (troopers[i].x >= Xcurseur - 22) && (troopers[i].y <= Ycurseur + 10) && (troopers[i].y >= Ycurseur - 10)){
+			//return true;
+			alert("collision");
+		}//else{ alert("loupé");}
+		if (i == troopers.length) i =0;
+	}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //------------DEBUT DU JEU---------------------------------------

@@ -1,6 +1,7 @@
 var canvas = document.getElementById("cv");
 var context = canvas.getContext("2d");
 
+//-------------------------------Construction du sol-------------------------------
 
 // affiche la glace (le sol) sur tout le canvas
 var drawIce = function () {
@@ -13,8 +14,9 @@ var drawIce = function () {
     }    
 };
 
+//-------------------------------Affichage des troupes-------------------------------
 
-//affiche tous les troopers de la liste entrée en paramètre
+//affiche toutes les troupes de la liste entrée en paramètre
 var drawUnits = function(units){
 
 	units.forEach(function(unit){
@@ -36,6 +38,7 @@ var drawUnits = function(units){
 		}
 	});
 }
+
 //affiche le trooper passé en paramètre aux coordonnées qui lui sont propres 
 //lors de sa déclaration
 var drawTrooper = function(trooper){
@@ -53,14 +56,14 @@ var drawVador = function(vador){
 var drawJedi = function(jedi){
 	context.drawImage(jedi["imJedi"],jedi["sx"],jedi["sy"],185,180,jedi["x"],jedi["y"]+10,60,60);
 };
+
 //affiche un droid passé en paramètre aux coordonnées qui lui sont propres 
 //lors de sa déclaration
 var drawDroid = function(droid){
 	context.drawImage(droid["imDroid"],droid["sx"],droid["sy"],185,180,droid["x"],droid["y"]+10,40,40);
 };
 
-
-
+//-------------------------------Affichage des vaisseaux des troupes-------------------------------
 
 //affiche le tieFighter associé au trooper passé en paramètre aux coordonnées
 // qui lui sont propres lors de sa déclaration
@@ -85,8 +88,50 @@ var drawMultiTroop = function(droid){
 	context.drawImage(droid["imMultiTroop"],0,0,459,279,droid["multiTroopX"],droid["multiTroopY"]-20,50,50);
 };
 
-//fait appraître les tieFighters (immobiles). Au bout d'une 
-//seconde le tieFighter disparait et le trooper avance.
+//-------------------------------Animation des troupes-------------------------------
+
+//gère le choix de l'image du trooper pour faire l'animation
+function animationTrooper(trooper){
+	if (trooper["sx"]==624){
+		trooper["sx"]=-156;
+	}
+	trooper["sx"]+=156;
+}
+//gère le choix de l'image de Vador pour faire l'animation
+function animationVador(vador){
+	if (vador["sx"]==600){
+		vador["sx"]=-150;
+	}
+	vador.sx+=150;
+	// le code en dessous fait marcher Vador plus doucement
+	//mais fait clignoter Vador de temps en temps
+	/*
+	if (vador["frame"]%10==0){
+		vador["sx"]+=150;
+	}
+	vador["frame"]++;
+	*/
+}
+
+//gère le chois de l'image du Jedi pour faire l'animation
+function animationJedi(jedi){
+	if (jedi["sx"]==555){
+		jedi["sx"]=-185;
+	}
+	jedi["sx"]+=185;
+}
+
+function animationDroid(droid){
+	if (droid["sx"]==600){
+		droid["sx"]=-150;
+	}
+	droid["sx"]+=150;
+}
+
+//-------------------------------Gestion des apparitions des troupes-------------------------------
+
+//fait appraître les vaisseaux (immobiles). Au bout d'une 
+//seconde le vaisseau disparait et le personnage avance.
 var popUp = function(units){
 	//popUpVador
 	var xVador=Math.floor(Math.random() * 551);
@@ -176,43 +221,7 @@ var popUp = function(units){
 	return units;
 }
 
-//gère le choix de l'image du trooper pour faire l'animation
-function animationTrooper(trooper){
-	if (trooper["sx"]==624){
-		trooper["sx"]=-156;
-	}
-	trooper["sx"]+=156;
-}
-//gère le choix de l'image de Vador pour faire l'animation
-function animationVador(vador){
-	if (vador["sx"]==600){
-		vador["sx"]=-150;
-	}
-	vador.sx+=150;
-	// le code en dessous fait marcher Vador plus doucement
-	//mais fait clignoter Vador de temps en temps
-	/*
-	if (vador["frame"]%10==0){
-		vador["sx"]+=150;
-	}
-	vador["frame"]++;
-	*/
-}
-
-//gère le chois de l'image du Jedi pour faire l'animation
-function animationJedi(jedi){
-	if (jedi["sx"]==555){
-		jedi["sx"]=-185;
-	}
-	jedi["sx"]+=185;
-}
-
-function animationDroid(droid){
-	if (droid["sx"]==600){
-		droid["sx"]=-150;
-	}
-	droid["sx"]+=150;
-}
+//-------------------------------Suppression des troupes-------------------------------
 
 function deleteUnit(units){
 	setInterval(function(){
@@ -225,9 +234,41 @@ function deleteUnit(units){
 	},2500);
 	return units;
 }
+
+//-------------------------------Utilisation du click pour supprimer les troupes-------------------------------
 	
+//Retrouner la position X et Y du curseur
+var Xcurseur = 0;
+var Ycurseur = 0;
+document.onclick = position;
+
+function position (evt) {
+	var XYrect = canvas.getBoundingClientRect(); 
+  	if (navigator.appName=="Microsoft Internet Explorer") {
+		Xcurseur = event.x + document.body.scrollLeft - XYrect.left;
+  		Ycurseur = event.y + document.body.scrollTop - XYrect.top;
+  	}else {
+		if(!evt) evt = window.event;    
+		Xcurseur = evt.clientX - XYrect.left;
+   		Ycurseur = evt.clientY - XYrect.top;
+	}
+	Collision(Xcurseur,Ycurseur,unitsList);
+};
 
 
+//Test pour savoir s'il y a collision entre le curseur et un trooper
+function Collision(Xcurseur, Ycurseur, units){
+	for(var i = 0; i < units.length ; i++){
+		if ((units[i].x <= Xcurseur + 22) && (units[i].x >= Xcurseur - 22) && (units[i].y <= Ycurseur + 10) && (units[i].y >= Ycurseur - 10)){
+			units.splice(i,1);
+		}
+		if (i == units.length) i = 0;
+	}
+};
+
+
+
+//-------------------------------Constructeurs des troupes et vaisseaux-------------------------------
 
 //Constructeur de l'objet trooper. Ses paramètres (x,y) sont les 
 //coordonnées de son coin supérieur gauche. sx permet de gérer l'animation
@@ -342,84 +383,6 @@ function Droid (x, y){
 	this.hp=1;
 	this.frame=0;
 }
-
-
-
-// Gestion du curseur et du click
-// Evenement à supprimer quand le jeu fonctionnera
-//$(canvas).click(function() {
-//    alert("Vous m'avez cliqué !");
-//});
-
-// Test pour trouver où se situe la souris
-//document.addEventListener('mousemove', function(e) {
-//    cv.innerHTML = 'Position X : ' + e.clientX + 'px<br />Position Y : ' + e.clientY + 'px';
-//});
-
-// Affiche une alerte lorsqu'on est sur le canvas
-//$(cv).mousemove(function(event) {
-//  alert("Vous êtes sur le canvas");
-//});
-//Affiche les coordonnées du canvas lorsqu'on rentre dessus.
-//$(canvas).mousemove(function(ev){
-//	$("body").text("( ev.clientX, ev.clientY ) : ( " + ev.pageX + ", " + ev.pageY + " )");
-//});
-
-// Cliquer sur un trooper
-function alertTrooper(troopers){
-	//console.log("o")
-	if(troopers[0]["y"] >= 5){
-		//console.log("ok");
-		console.log(troopers[0].y);
-	};
-};
-
-//Retrouner la position X et Y du curseur
-var Xcurseur = 0;
-var Ycurseur = 0;
-document.onclick = position;
-
-function position (evt) {
-	var XYrect = canvas.getBoundingClientRect(); 
-  	if (navigator.appName=="Microsoft Internet Explorer") {
-		Xcurseur = event.x + document.body.scrollLeft - XYrect.left;
-  		Ycurseur = event.y + document.body.scrollTop - XYrect.top;
-  	}else {
-		if(!evt) evt = window.event;    
-		Xcurseur = evt.clientX - XYrect.left;
-   		Ycurseur = evt.clientY - XYrect.top;
-	}
-	fShowTable();
-	CollisionTrooper(Xcurseur,Ycurseur,troopList);
-};
-
-// Affichage de la position sur la console
-function fShowTable() {
-	console.log('x= '+ Xcurseur +' ,y= '+ Ycurseur);
-};
-
-
-
-//Test pour savoir s'il y a collision entre le curseur et un trooper
-function CollisionTrooper(Xcurseur, Ycurseur, troopers){
-	for(var i = 0; i < troopers.length ; i++){
-		if ((troopers[i].x <= Xcurseur + 22) && (troopers[i].x >= Xcurseur - 22) && (troopers[i].y <= Ycurseur + 10) && (troopers[i].y >= Ycurseur - 10)){
-			//return true;
-			alert("collision");
-		}//else{ alert("loupé");}
-		if (i == troopers.length) i =0;
-	}
-};
-
-
-
-
-
-
-
-
-
-
 
 
 

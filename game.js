@@ -236,8 +236,33 @@ function deleteUnit(units){
 }
 
 //-------------------------------Utilisation du click pour supprimer les troupes-------------------------------
-	
-//Retrouner la position X et Y du curseur
+document.addEventListener('mousemove', function(event) { 
+   //context2.clearRect(0,0,canvas.width,canvas.height); // efface le cadre 2
+   var XYrect = canvas.getBoundingClientRect();    // action avec le canvas et pas le context
+   var Xcurseur = Math.round(event.clientX - XYrect.left); 
+   var Ycurseur = Math.round(event.clientY - XYrect.top);
+   cv.innerHTML = 'Position X : ' + Xcurseur + 'px<br />Position Y : ' + Ycurseur + 'px';
+   
+   // Pour afficher le résultat sur le canvas
+   //context2.fillStyle = "white";
+   //context2.globalCompositeOperation = "destination-over";
+   //context2.fillText("Position de la souris",10, 35);
+   //context2.fillText("X="+Xcurseur, 70, 70);
+   //context2.fillText("Y="+Ycurseur, 70, 105);
+}); 
+
+//Fonction permettant de supprimer une troupe
+function Collision(Xcurseur, Ycurseur, units){
+	for(var i = 0; i < units.length ; i++){
+		if ((units[i].x <= Xcurseur + 24) && (units[i].x >= Xcurseur - 24) && (units[i].y <= Ycurseur + 13) && (units[i].y >= Ycurseur - 13)){
+			units.splice(i,1);
+			return true;
+		}
+		if (i == units.length) i = 0;
+	}
+};
+
+//Retourne la position du curseur au clique et supprime une troupe si elle coïncide avec une troupe
 var Xcurseur = 0;
 var Ycurseur = 0;
 document.onclick = position;
@@ -255,16 +280,9 @@ function position (evt) {
 	Collision(Xcurseur,Ycurseur,unitsList);
 };
 
+//-------------------------------Comptage des points-------------------------------
 
-//Test pour savoir s'il y a collision entre le curseur et un trooper
-function Collision(Xcurseur, Ycurseur, units){
-	for(var i = 0; i < units.length ; i++){
-		if ((units[i].x <= Xcurseur + 22) && (units[i].x >= Xcurseur - 22) && (units[i].y <= Ycurseur + 10) && (units[i].y >= Ycurseur - 10)){
-			units.splice(i,1);
-		}
-		if (i == units.length) i = 0;
-	}
-};
+
 
 
 

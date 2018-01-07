@@ -6,5 +6,5 @@ body {
 #cv {
     display: block;
     margin: 50px auto;
-    cursor: url("target-ConvertImage.png") 25 25, pointer;
+    cursor: url("target-ConvertImage.png"), pointer;
 }

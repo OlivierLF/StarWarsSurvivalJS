@@ -23,18 +23,22 @@ var drawUnits = function(units){
 		if (unit.type=="trooper"){
 			drawTieFighter(unit);
 			drawTrooper(unit);
+			drawHealthBar(unit);
 		}
 		if (unit.type=="jedi"){
 			drawXwing(unit);
 			drawJedi(unit);
+			drawHealthBar(unit);
 		}
 		if (unit.type=="vador" ){
 			drawDestroyer(unit);
 			drawVador(unit);
+			drawHealthBar(unit);
 		}
 		if (unit.type=="droid" ){
 			drawMultiTroop(unit);
 			drawDroid(unit);
+			drawHealthBar(unit);
 		}
 	});
 }
@@ -60,7 +64,7 @@ var drawJedi = function(jedi){
 //affiche un droid passé en paramètre aux coordonnées qui lui sont propres 
 //lors de sa déclaration
 var drawDroid = function(droid){
-	context.drawImage(droid["imDroid"],droid["sx"],droid["sy"],185,180,droid["x"],droid["y"]+10,40,40);
+	context.drawImage(droid["imDroid"],droid["sx"],droid["sy"],185,160,droid["x"],droid["y"]+10,40,40);
 };
 
 //-------------------------------Affichage des vaisseaux des troupes-------------------------------
@@ -140,6 +144,7 @@ var popUp = function(units){
 	units.push(vador);
 	drawDestroyer(vador);
 	drawVador(vador);
+	drawHealthBar(vador);
 	setTimeout(function(){
 		vador["imDestroyer"].src="ice.jpg";
 	},5000);
@@ -150,8 +155,9 @@ var popUp = function(units){
 			var yDroid=Math.floor(Math.random() * 101);
 			var droid=new Droid(xDroid,yDroid);
 			units.push(droid);
-			drawMultiTroop(droid)
+			drawMultiTroop(droid);
 			drawDroid(droid);
+			drawHealthBar(droid);
 			setTimeout(function(){
 				droid["imMultiTroop"].src="ice.jpg";
 		},1500);
@@ -163,8 +169,9 @@ var popUp = function(units){
 			var yTrooper=Math.floor(Math.random() * 101);
 			var troop=new Trooper(xTrooper,yTrooper);
 			units.push(troop);
-			drawTieFighter(troop)
+			drawTieFighter(troop);
 			drawTrooper(troop);
+			drawHealthBar(troop);
 			setTimeout(function(){
 				troop["imTieFighter"].src="ice.jpg";
 		},1500);
@@ -178,6 +185,7 @@ var popUp = function(units){
 			units.push(jedi);
 			drawXwing(jedi);
 			drawJedi(jedi);
+			drawHealthBar(jedi);
 			setTimeout(function(){
 				jedi["imXwing"].src="ice.jpg";
 		},2000);
@@ -191,24 +199,28 @@ var popUp = function(units){
 					unit["y"]=unit["y"]+1;
 					drawDestroyer(unit);
 					drawVador(unit);
+					drawHealthBar(unit);
 					animationVador(unit);
 				}
 				if (unit.type=="jedi"){
 					unit["y"]=unit["y"]+3;
 					drawXwing(unit);
 					drawJedi(unit);
+					drawHealthBar(unit);
 					animationJedi(unit);
 				}
 				if (unit.type=="trooper"){
 					unit["y"]=unit["y"]+4;
 					drawTieFighter(unit);
-					drawTrooper(unit)
+					drawTrooper(unit);
+					drawHealthBar(unit);
 					animationTrooper(unit);
 				}
 				if (unit.type=="droid"){
 					unit["y"]=unit["y"]+5;
 					drawMultiTroop(unit);
 					drawDroid(unit);
+					drawHealthBar(unit);
 					animationDroid(unit);
 				}
 			})
@@ -236,31 +248,57 @@ function deleteUnit(units){
 }
 
 //-------------------------------Utilisation du click pour supprimer les troupes-------------------------------
-document.addEventListener('mousemove', function(event) { 
-   //context2.clearRect(0,0,canvas.width,canvas.height); // efface le cadre 2
-   var XYrect = canvas.getBoundingClientRect();    // action avec le canvas et pas le context
-   var Xcurseur = Math.round(event.clientX - XYrect.left); 
-   var Ycurseur = Math.round(event.clientY - XYrect.top);
-   cv.innerHTML = 'Position X : ' + Xcurseur + 'px<br />Position Y : ' + Ycurseur + 'px';
-   
-   // Pour afficher le résultat sur le canvas
-   //context2.fillStyle = "white";
-   //context2.globalCompositeOperation = "destination-over";
-   //context2.fillText("Position de la souris",10, 35);
-   //context2.fillText("X="+Xcurseur, 70, 70);
-   //context2.fillText("Y="+Ycurseur, 70, 105);
-}); 
 
 //Fonction permettant de supprimer une troupe
-function Collision(Xcurseur, Ycurseur, units){
+function collision(Xcurseur, Ycurseur, units){
 	for(var i = 0; i < units.length ; i++){
-		if ((units[i].x <= Xcurseur + 24) && (units[i].x >= Xcurseur - 24) && (units[i].y <= Ycurseur + 13) && (units[i].y >= Ycurseur - 13)){
-			units.splice(i,1);
-			return true;
+		// Le clique est centré donc il faut rajouter le centrage dans les conditions
+		if ((units[i].x <= Xcurseur + 20) && (units[i].x >= Xcurseur - 40) && (units[i].y <= Ycurseur) && (units[i].y >= Ycurseur - 65)){
+			//units.splice(i,1);
+			healthBarControl(units,i);
 		}
 		if (i == units.length) i = 0;
 	}
 };
+function healthBarControl(units,i){
+	units[i]["hp"] -= 1;
+	if(units[i]["hp"] == 0){
+		death(units,i);
+	}
+	if(units[i]["type"] == "trooper")
+	{
+		if(units[i]["hp"] == 1){
+			units[i]["imHealthBar"].src="healthMid.png";
+		}
+	}
+	if(units[i]["type"] == "jedi"){
+		if(units[i]["hp"] == 2){
+			units[i]["imHealthBar"].src="health2Thirds.png";
+		}
+		if(units[i]["hp"] == 1){
+			units[i]["imHealthBar"].src="healthQuarter.png";
+		}
+	}
+	if(units[i]["type"] == "vador"){
+		if(units[i]["hp"] == 24){
+			units[i]["imHealthBar"].src="health3Quarters.png";
+		}
+		if(units[i]["hp"] == 20){
+			units[i]["imHealthBar"].src="health2Thirds.png";
+		}
+		if(units[i]["hp"] == 13){
+			units[i]["imHealthBar"].src="healthMid.png";
+		}
+		if(units[i]["hp"] == 5){
+			units[i]["imHealthBar"].src="healthQuarter.png";
+		}
+
+	}
+}
+
+function death(units,i){
+	units.splice(i,1);
+}
 
 //Retourne la position du curseur au clique et supprime une troupe si elle coïncide avec une troupe
 var Xcurseur = 0;
@@ -277,10 +315,16 @@ function position (evt) {
 		Xcurseur = evt.clientX - XYrect.left;
    		Ycurseur = evt.clientY - XYrect.top;
 	}
-	Collision(Xcurseur,Ycurseur,unitsList);
+	collision(Xcurseur,Ycurseur,unitsList);
 };
 
 //-------------------------------Comptage des points-------------------------------
+//-------------------------------Création d'une barre de vie-------------------------------
+var drawHealthBar = function(unit){
+	context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]+5,40,4);
+}
+
+
 
 
 
@@ -298,6 +342,8 @@ function Trooper (x, y){
 	this["imVador"].src="vador.png";
 	this.imJedi=new Image();
 	this["imJedi"].src="jedi.png";
+	this.imDroid=new Image();
+	this["imDroid"].src="droid.png"
 	this.imTieFighter=new Image();
 	this["imTieFighter"].src="tieFighter.png";
 	this.imDestroyer= new Image();
@@ -306,6 +352,8 @@ function Trooper (x, y){
 	this["imXwing"].src="xwing.png";
 	this.imMultiTroop=new Image();
 	this["imMultiTroop"].src="multiTroop.png";
+	this.imHealthBar = new Image();
+	this["imHealthBar"].src = "healthFull.png";
 	this.x=x;
 	this.y=y;
 	this.sx=0;
@@ -334,6 +382,8 @@ function Vador (x, y){
 	this["imXwing"].src="xwing.png";
 	this.imMultiTroop=new Image();
 	this["imMultiTroop"].src="multiTroop.png";
+	this.imHealthBar = new Image();
+	this["imHealthBar"].src = "healthFull.png";
 	this.x=x;
 	this.y=y;
 	this.sx=0;
@@ -364,13 +414,15 @@ function Jedi (x, y){
 	this["imXwing"].src="xwing.png";
 	this.imMultiTroop=new Image();
 	this["imMultiTroop"].src="multiTroop.png";
+	this.imHealthBar = new Image();
+	this["imHealthBar"].src = "healthFull.png";
 	this.x=x;
 	this.y=y;
 	this.sx=0;
 	this.sy=380;
 	this.xwingX=x;
 	this.xwingY=y;
-	this.hp=10;
+	this.hp=3;
 	this.frame=0;
 }
 
@@ -392,6 +444,8 @@ function Droid (x, y){
 	this["imXwing"].src="xwing.png";
 	this.imMultiTroop=new Image();
 	this["imMultiTroop"].src="multiTroop.png";
+	this.imHealthBar = new Image();
+	this["imHealthBar"].src = "healthFull.png";
 	this.x=x;
 	this.y=y;
 	this.sx=0;
@@ -422,6 +476,7 @@ setTimeout(function(){
 //Fonction principale du jeu
 function startGame(){
 	drawIce();
-	unitsList=[];
-	unitsList=popUp(unitsList);
+	unitsList = [];
+	unitsList = popUp(unitsList);
+	unitsList = deleteUnit(unitsList);
 }

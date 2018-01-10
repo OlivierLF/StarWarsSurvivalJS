@@ -151,6 +151,11 @@ function animationDroid(droid){
 //-------------------------------------Gestion des apparitions des troupes------------------------------------
 //------------------------------------------------------------------------------------------------------------
 
+// Variables globales
+var popUpDroids;
+var popUpTroopers;
+var popUpJedis;
+var popUpUnits;
 // Fait appraître les vaisseaux (immobiles). Au bout d'une 
 // seconde le vaisseau disparait et le personnage avance.
 var popUp = function(units){
@@ -167,7 +172,7 @@ var popUp = function(units){
 	},5000);
 	
 	//popUpDroids
-	setInterval(function(){
+	popUpDroids = setInterval(function(){
 			var xDroid=Math.floor(Math.random() * 551);
 			var yDroid=Math.floor(Math.random() * 101);
 			var droid=new Droid(xDroid,yDroid);
@@ -181,7 +186,7 @@ var popUp = function(units){
 	},1800);
 
 	//popUpTroopers
-	setInterval(function(){
+	popUpTroopers = setInterval(function(){
 			var xTrooper=Math.floor(Math.random() * 551);
 			var yTrooper=Math.floor(Math.random() * 101);
 			var troop=new Trooper(xTrooper,yTrooper);
@@ -195,7 +200,7 @@ var popUp = function(units){
 	},2200);
 
 	//popUpJedis
-	setInterval(function(){
+	popUpJedis = setInterval(function(){
 			var xJedi=Math.floor(Math.random() * 551);
 			var yJedi=Math.floor(Math.random() * 101);
 			var jedi=new Jedi(xJedi,yJedi);
@@ -209,8 +214,8 @@ var popUp = function(units){
 	},3000);
 
 	//refresh toutes les 0.1s
-	setTimeout(function(){
-		setInterval(function(){
+	//setTimeout(function(){
+		popUpUnits = setInterval(function(){
 			units.forEach(function(unit){
 				if (unit.type=="vador"){
 					unit["y"]=unit["y"]+1;
@@ -246,25 +251,7 @@ var popUp = function(units){
 			display(score);
 			console.log(units);
 		},100);
-	},2000);
-	return units;
-}
-
-
-//------------------------------------------------------------------------------------------------------------
-//-------------------------------------------Suppression des troupes------------------------------------------
-//------------------------------------------------------------------------------------------------------------
-
-// Fonction qui permet de supprimer les troupes lorsqu'elles ont dépassé le canvas
-function deleteUnit(units){
-	setInterval(function(){
-		var i=0;
-		for (i;i<units.length;i++){
-			if (units[i].y>800){
-					units.splice(i,1);
-				}
-			}
-	},2500);
+	//},2000);
 	return units;
 }
 
@@ -350,7 +337,32 @@ function healthBarControl(units,i){
 	}
 }
 
-//Gestion du score en fonction des personnages éliminés
+
+//------------------------------------------------------------------------------------------------------------
+//---------------------------Suppression des troupes, gestion du score et de la vie---------------------------
+//------------------------------------------------------------------------------------------------------------
+
+// Variable globale
+var life = 10;
+
+// Fonction qui permet de supprimer les troupes lorsqu'elles ont dépassé le canvas
+function deleteUnit(units){
+	setInterval(function(){
+		var i=0;
+		for (i;i<units.length;i++){
+			if (units[i].y>800){
+					units.splice(i,1);
+					life -= 1;
+					if (life == 0){
+						loose();
+					}
+				}
+			}
+	},2500);
+	return units;
+}
+
+// Gestion du score en fonction des personnages éliminés
 var score = 0;
 function death(units,i){
 	if(units[i]["type"] == "droid"){
@@ -370,18 +382,70 @@ function death(units,i){
 
 
 //------------------------------------------------------------------------------------------------------------
-//-------------------------------------Affichage du temps et des points---------------------------------------
+//------------------------------Affichage du temps et de la vie et des points---------------------------------
 //------------------------------------------------------------------------------------------------------------
+
+
 
 // Affichage du score, de la vie et du temps
 function display(score){
 	context.fillStyle = "white";
 	context.font = "bold 15px Calibri,Geneva,Arial";
-	context.fillText("Score : ",5, 15);
-	context.fillText( +score ,60, 15);
-	context.fillText("Life : ",245, 15);
-	context.fillText("Time : ",500, 15);
+	context.fillText("Score : " , 5 , 15);
+	context.fillText( +score , 60 , 15);
+	context.fillText("Life : " , 245 , 15);
+	context.fillText(+life , 280 , 15);
+	context.fillText("Time : ", 500 , 15);
 }
+
+
+//------------------------------------------------------------------------------------------------------------
+//---------------------------------Gestion de la victoire et de la défaite------------------------------------
+//------------------------------------------------------------------------------------------------------------
+
+// Fonction qui gère la défaite
+function loose(){
+	canvas = document.getElementById("cv").style.opacity = "0.3";
+	stop();
+	context.fillStyle = "white";
+	context.font = "bold 40px Calibri,Geneva,Arial";
+	context.fillText("Etre un perdant," , 50 , 200);
+	context.fillText("c'est pas le plus difficile." , 50 , 250);
+	context.fillText("Ce qui compte, " , 50, 300);
+	context.fillText("c'est le style de votre défaite." , 50 , 350);
+	context.fillText("Score : " , 50 , 400);
+	context.fillText( +score , 200 , 400);
+}
+
+
+
+
+//------------------------------------------------------------------------------------------------------------
+//-----------------------------------------Mettre le jeu en pause---------------------------------------------
+//------------------------------------------------------------------------------------------------------------
+
+// A FINIR
+// On met p à 1 pour dire que le jeu fonctionne. Pour p = 0 il est en pause.
+var p = 1;
+var pause = document.addEventListener('keypress', function(event) {
+	if(event.key == "spacebar" && p != 0){
+		p = 0;
+		//stop();
+	}else if(event.key == "spacebar" && p == 0){
+		p = 1;
+	}
+
+})
+
+//Fonction qui stoppe les setinterval
+function stop(){
+	clearInterval(popUpDroids);
+	clearInterval(popUpTroopers);
+	clearInterval(popUpJedis);
+	clearInterval(popUpUnits);
+}
+
+
 
 
 //------------------------------------------------------------------------------------------------------------

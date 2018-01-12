@@ -7,7 +7,7 @@ var context = canvas.getContext("2d");
 //------------------------------------------------------------------------------------------------------------
 
 // Affiche la glace (le sol) sur tout le canvas
-var drawIce = function () {
+var drawBeton = function () {
     for(var j=0;j<8;j++) {
 		for(var i=0;i<6;i++){
             context.drawImage(beton,0,0,225,225,100*i,100*j,100,100);
@@ -143,9 +143,6 @@ function animationDroid(droid){
 //------------------------------------------------------------------------------------------------------------
 
 // Variables globales
-var popUpDroids;
-var popUpTroopers;
-var popUpJedis;
 var popUpUnits;
 
 var testTroopers=false;
@@ -351,7 +348,7 @@ var popUp = function(units){
 				animationTrooper(unit);
 			}
 			if (unit.type=="droid"){
-				unit["y"]=unit["y"]+5;
+				unit["y"]=unit["y"]+8;
 				drawMultiTroop(unit);
 				drawDroid(unit);
 				drawHealthBar(unit);
@@ -359,9 +356,13 @@ var popUp = function(units){
 			}
 		})
 		time=time-0.1;
-		drawIce();
+		
+		drawBeton();
 		drawUnits(units);
 		display(); 
+		if (time<=0){
+			win();
+		}
 	},100);
 	return units;
 }
@@ -378,6 +379,10 @@ document.onclick = position;
 
 // Retourne la position du curseur au clic et appelle la fonction "collision()"
 function position (evt) {
+
+	if (soundBlaster.currentTime!=0){
+		soundBlaster.currentTime=0;
+	}
 	soundBlaster.play();
 	var XYrect = canvas.getBoundingClientRect(); 
   	if (navigator.appName=="Microsoft Internet Explorer") {
@@ -466,7 +471,7 @@ function healthBarControl(units,i){
 //------------------------------------------------------------------------------------------------------------
 
 // Variable globale
-var life = 10;
+var life = 1;
 
 // Fonction qui permet de supprimer les troupes lorsqu'elles ont dépassé le canvas
 function deleteUnit(units){
@@ -475,7 +480,7 @@ function deleteUnit(units){
 		for (i;i<units.length;i++){
 			if (units[i].y>800){
 					units.splice(i,1);
-					life -= 1;
+					//life -= 1;
 					if (life == 0){
 						loose();
 					}
@@ -500,6 +505,7 @@ function death(units,i){
 	if(units[i]["type"] == "vador"){
 		score += 30;
 		vadorTheme.pause();
+		vadorTheme.currentTime=0;
 		firstSong.play();
 	}
 	units.splice(i,1);
@@ -540,11 +546,23 @@ function loose(){
 	firstSong.pause();
 	defeatSong1.play();
 	setTimeout(function(){
-		defeatSong1.pause();
 		defeatSong2.play();
 		defeatSong2.loop=true;
 	},3000);  
 	context.drawImage(youLoose, 0,0,600,800);
+	context.fillText("Score : " , 5 , 15);
+	context.fillText( +score , 60 , 15);
+	oneGame=false;
+}
+
+//Fonction qui gère la victoire
+function win(){
+	stop();
+	time=0;
+	vadorTheme.pause();
+	firstSong.pause();
+	winSong.play();
+	context.drawImage(youWin, 0,0,369,532,0,0,600,800);
 	context.fillText("Score : " , 5 , 15);
 	context.fillText( +score , 60 , 15);
 	oneGame=false;
@@ -605,6 +623,7 @@ function stop(){
 	}
 	if (time>60){
 		clearInterval(popUpControl2000);
+
 	}
 }
 
@@ -751,6 +770,7 @@ var defeatSong2= new Audio("defeatSong2.mp3");
 var firstSong=new Audio("firstSong.mp3");
 var vadorTheme= new Audio("vadorTheme.mp3");
 var menuSong= new Audio("accueil.mp3");
+var winSong= new Audio("cantina.mp3");
 
 //------------------MENU----------
 function menu(){
@@ -777,7 +797,7 @@ function init(){
 	nbTypesUnitTestJedis=false;
 	changeFreqTest=false;
 
-	life = 10;
+	life = 1;
 	score=0;
 	time=200;
 }
@@ -796,6 +816,9 @@ accueil.src="accueil.jpg";
 //declaration image youLoose
 var youLoose= new Image();
 youLoose.src="youLoose.png";
+//declaration image youLoose
+var youWin= new Image();
+youWin.src="youWin.jpg";
 //var de test pour lancer qu'un seul jeu a la fois
 var oneGame=false;
 
@@ -809,7 +832,8 @@ function startGame(){
 	menuSong.pause();
 	defeatSong1.pause();
 	defeatSong2.pause();
-	drawIce();
+	winSong.pause();
+	drawBeton();
 	unitsList=[];
 	init();
 	unitsList=popUp(unitsList);

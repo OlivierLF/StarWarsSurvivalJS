@@ -586,10 +586,12 @@ var keyPressed = document.addEventListener('keypress', (event) => {
 		}
 		console.log("reprise")
 	}
-	else if(event.which==114 && oneGame==false){
-		init();
-		startGame();
-	}
+	else if(event.which == 13 && oneGame==false){
+			oneGame=true;
+			init();
+			startGame();
+		}
+
 
 })
 
@@ -759,6 +761,7 @@ function menu(){
  		console.log(event.which);
 		if(event.which == 13 && oneGame==false){
 			oneGame=true;
+			init();
 			startGame();
 		}
 	})

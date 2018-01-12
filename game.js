@@ -8,12 +8,10 @@ var context = canvas.getContext("2d");
 
 // Affiche la glace (le sol) sur tout le canvas
 var drawIce = function () {
-    for(var j=0;j<16;j++)
-    {
-        for(var i=0;i<12;i++)
-        {
-            context.drawImage(ice,0,0,100,150,50*i,50*j,50,50);
-        }
+    for(var j=0;j<8;j++) {
+		for(var i=0;i<6;i++){
+            context.drawImage(beton,0,0,225,225,100*i,100*j,100,100);
+        }    
     }    
 };
 
@@ -51,25 +49,25 @@ var drawUnits = function(units){
 // Affiche le trooper passé en paramètre aux coordonnées qui lui sont propres 
 // lors de sa déclaration
 var drawTrooper = function(trooper){
-	context.drawImage(trooper["imTrooper"],trooper["sx"],0,156,180,trooper["x"],trooper["y"]+20,50,50);
+	context.drawImage(trooper["imTrooper"],trooper["sx"],trooper["sy"],76,115,trooper["x"],trooper["y"],70,100);
 };
 
 // Affiche Vador passé en paramètre aux coordonnées qui lui sont propres 
 // lors de sa déclaration
 var drawVador = function(vador){
-	context.drawImage(vador["imVador"],vador["sx"],vador["sy"],156,140,vador["x"],vador["y"]+20,70,70);
+	context.drawImage(vador["imVador"],vador["sx"],vador["sy"],80,100,vador["x"],vador["y"],80,100);
 };
 
 // Affiche un jedi passé en paramètre aux coordonnées qui lui sont propres 
 // lors de sa déclaration
 var drawJedi = function(jedi){
-	context.drawImage(jedi["imJedi"],jedi["sx"],jedi["sy"],185,180,jedi["x"],jedi["y"]+10,60,60);
+	context.drawImage(jedi["imJedi"],jedi["sx"],jedi["sy"],76,115,jedi["x"],jedi["y"],70,100);
 };
 
 // Affiche un droid passé en paramètre aux coordonnées qui lui sont propres 
 // lors de sa déclaration
 var drawDroid = function(droid){
-	context.drawImage(droid["imDroid"],droid["sx"],droid["sy"],185,160,droid["x"],droid["y"]+10,40,40);
+	context.drawImage(droid["imDroid"],droid["sx"],droid["sy"],95,285,droid["x"],droid["y"],33,100);
 };
 
 
@@ -80,25 +78,25 @@ var drawDroid = function(droid){
 // Affiche le tieFighter associé au trooper passé en paramètre aux coordonnées
 // qui lui sont propres lors de sa déclaration
 var drawTieFighter = function(trooper){
-	context.drawImage(trooper["imTieFighter"],0,0,810,984,trooper["tieFighterX"],trooper["tieFighterY"],50,50);
+	context.drawImage(trooper["imTieFighter"],0,0,810,984,trooper["tieFighterX"],trooper["tieFighterY"]-20,120,120);
 };
 
 // Affiche le tieFighter associé au trooper passé en paramètre aux coordonnées
 // qui lui sont propres lors de sa déclaration
 var drawDestroyer = function(vador){
-	context.drawImage(vador["imDestroyer"],0,0,640,453,vador["destroyerX"],vador["destroyerY"]-20,70,70);
+	context.drawImage(vador["imDestroyer"],0,0,640,453,vador["destroyerX"],vador["destroyerY"]-80,150,150);
 };
 
 // Affiche le X-Wing associé au jedi passé en paramètre aux coordonnées
 // qui lui sont propres lors de sa déclaration
 var drawXwing = function(jedi){
-	context.drawImage(jedi["imXwing"],0,0,604,450,jedi["xwingX"],jedi["xwingY"]-20,60,60);
+	context.drawImage(jedi["imXwing"],0,0,604,450,jedi["xwingX"],jedi["xwingY"]-20,130,130);
 };
 
 // Affiche le vehicule multiTroop associé au droid passé en paramètre aux coordonnées
 // qui lui sont propres lors de sa déclaration
 var drawMultiTroop = function(droid){
-	context.drawImage(droid["imMultiTroop"],0,0,459,279,droid["multiTroopX"],droid["multiTroopY"]-20,50,50);
+	context.drawImage(droid["imMultiTroop"],0,0,459,279,droid["multiTroopX"],droid["multiTroopY"]-20,100,100);
 };
 
 
@@ -108,42 +106,35 @@ var drawMultiTroop = function(droid){
 
 // Gère le choix de l'image du trooper pour faire l'animation
 function animationTrooper(trooper){
-	if (trooper["sx"]==624){
-		trooper["sx"]=-156;
+	if (trooper["sx"]==304){
+		trooper["sx"]=-76;
 	}
-	trooper["sx"]+=156;
+	trooper["sx"]+=76;
 }
 
 // Gère le choix de l'image de Vador pour faire l'animation
 function animationVador(vador){
-	if (vador["sx"]==600){
-		vador["sx"]=-150;
+
+	if (vador["sx"]==240){
+		vador["sx"]=-80;
 	}
-	vador.sx+=150;
-	// le code en dessous fait marcher Vador plus doucement
-	//mais fait clignoter Vador de temps en temps
-	/*
-	if (vador["frame"]%10==0){
-		vador["sx"]+=150;
-	}
-	vador["frame"]++;
-	*/
+	vador.sx+=80;
 }
 
 // Gère le choix de l'image du Jedi pour faire l'animation
 function animationJedi(jedi){
-	if (jedi["sx"]==555){
-		jedi["sx"]=-185;
+	if (jedi["sx"]==228){
+		jedi["sx"]=-76;
 	}
-	jedi["sx"]+=185;
+	jedi["sx"]+=76;
 }
 
 // Gère le choix de l'image du droid pour faire l'animation
 function animationDroid(droid){
-	if (droid["sx"]==600){
-		droid["sx"]=-150;
+	if (droid["sx"]==285){
+		droid["sx"]=-95;
 	}
-	droid["sx"]+=150;
+	droid["sx"]+=95;
 }
 
 
@@ -156,102 +147,222 @@ var popUpDroids;
 var popUpTroopers;
 var popUpJedis;
 var popUpUnits;
-// Fait appraître les vaisseaux (immobiles). Au bout d'une 
-// seconde le vaisseau disparait et le personnage avance.
-var popUp = function(units){
-	//popUpVador
-	var xVador=Math.floor(Math.random() * 551);
-	var yVador=Math.floor(Math.random() * 101);
-	var vador=new Vador(xVador,yVador);
-	units.push(vador);
-	drawDestroyer(vador);
-	drawVador(vador);
-	drawHealthBar(vador);
-	setTimeout(function(){
-		vador["imDestroyer"].src="ice.jpg";
-	},5000);
-	
-	//popUpDroids
-	popUpDroids = setInterval(function(){
-			var xDroid=Math.floor(Math.random() * 551);
-			var yDroid=Math.floor(Math.random() * 101);
-			var droid=new Droid(xDroid,yDroid);
-			units.push(droid);
-			drawMultiTroop(droid);
-			drawDroid(droid);
-			drawHealthBar(droid);
-			setTimeout(function(){
-				droid["imMultiTroop"].src="ice.jpg";
-		},1500);
-	},1800);
 
-	//popUpTroopers
-	popUpTroopers = setInterval(function(){
-			var xTrooper=Math.floor(Math.random() * 551);
-			var yTrooper=Math.floor(Math.random() * 101);
+var testTroopers=false;
+var testJedis=false;
+var testVador=false;
+var nbTypesUnit=1;
+var nbTypesUnitTestTroopers=false;
+var nbTypesUnitTestJedis=false;
+var changeFreqTest=false;
+
+var popUp = function(units){
+	firstSong.play();
+	firstSong.loop=true;
+	popUpControl2000=setInterval(function(){
+		var choix = Math.floor((Math.random() * nbTypesUnit) + 1); //nb random entre 1 et 3
+		console.log("time " + time);
+		//console.log("math.floor"+Math.floor(time));
+		console.log("nbtype "+nbTypesUnit);
+		console.log(choix);
+		if (Math.floor(time)<=170 && nbTypesUnitTestTroopers==false){
+			testTroopers=true;
+			nbTypesUnit+=1;
+			nbTypesUnitTestTroopers=true;
+		}
+		if (Math.floor(time)<=100 && nbTypesUnitTestJedis==false){
+			testJedis=true;
+			nbTypesUnit+=1;
+			nbTypesUnitTestJedis=true;
+		}
+		if (Math.floor(time)<=60){
+			testVador=true;
+			nbTypesUnitTest=true;
+			changeFreqTest=true;
+			clearInterval(popUpControl2000)
+		}
+		//popUpTroopers au bout de 30s de jeu
+		if (choix ==2 && testTroopers){
+			var xTrooper=Math.floor(Math.random() * 500)+50;
+			var yTrooper=Math.floor(Math.random() * 50)+50;
 			var troop=new Trooper(xTrooper,yTrooper);
 			units.push(troop);
 			drawTieFighter(troop);
 			drawTrooper(troop);
 			drawHealthBar(troop);
 			setTimeout(function(){
-				troop["imTieFighter"].src="ice.jpg";
-		},1500);
-	},2200);
-
-	//popUpJedis
-	popUpJedis = setInterval(function(){
-			var xJedi=Math.floor(Math.random() * 551);
-			var yJedi=Math.floor(Math.random() * 101);
+				troop["imTieFighter"].src="beton.png";
+			},3000);
+		}
+		
+		//popUpJedis au bout de 1min40s=100s de jeu
+		if (choix==3 && testJedis){
+			var xJedi=Math.floor(Math.random() * 500)+50;
+			var yJedi=Math.floor(Math.random() * 50)+50;
 			var jedi=new Jedi(xJedi,yJedi);
 			units.push(jedi);
 			drawXwing(jedi);
 			drawJedi(jedi);
 			drawHealthBar(jedi);
 			setTimeout(function(){
-				jedi["imXwing"].src="ice.jpg";
-		},2000);
-	},3000);
+				jedi["imXwing"].src="beton.png";
+			},3000);
+		}
+
+		//popUpVador au bout de 2min20=140s de jeu
+		if (testVador){
+			var xVador=Math.floor(Math.random() * 500)+50;
+			var yVador=Math.floor(Math.random() * 50)+50;
+			var vador=new Vador(xVador,yVador);
+			units.push(vador);
+			drawDestroyer(vador);
+			drawVador(vador);
+			drawHealthBar(vador);
+			firstSong.pause();
+			vadorTheme.play();
+			setTimeout(function(){
+				vador["imDestroyer"].src="beton.png";
+			},5000);
+			testVador=false;
+		}
+		//popUpDroids
+		if (choix==1) {
+			var xDroid=Math.floor(Math.random() * 510)+30;
+			var yDroid=Math.floor(Math.random() * 70)+30;
+			var droid=new Droid(xDroid,yDroid);
+			units.push(droid);
+			drawMultiTroop(droid);
+			drawDroid(droid);
+			drawHealthBar(droid);
+			setTimeout(function(){
+				droid["imMultiTroop"].src="beton.png";
+			},3000);
+		}
+	}, 2000)
+	
+	
+
 
 	//refresh toutes les 0.1s
-	//setTimeout(function(){
-		popUpUnits = setInterval(function(){
-			units.forEach(function(unit){
-				if (unit.type=="vador"){
-					unit["y"]=unit["y"]+1;
-					drawDestroyer(unit);
-					drawVador(unit);
-					drawHealthBar(unit);
-					animationVador(unit);
+	popUpUnits = setInterval(function(){
+		
+		//si le changement de frequence est fait
+		if (changeFreqTest){
+			changeFreqTest=false;
+			clearInterval(popUpControl2000);
+			popUpControl1000=setInterval(function(){
+				var choix = Math.floor((Math.random() * nbTypesUnit) + 1);
+				console.log("time " + time);
+				//console.log("math.floor"+Math.floor(time));
+				//console.log("nbtype "+nbTypesUnit);
+				console.log(choix);
+				if (Math.floor(time)==198){
+					testTroopers=true;
+					nbTypesUnit+=1;
 				}
-				if (unit.type=="jedi"){
-					unit["y"]=unit["y"]+3;
-					drawXwing(unit);
-					drawJedi(unit);
-					drawHealthBar(unit);
-					animationJedi(unit);
+				if (Math.floor(time)==190){
+					testJedis=true;
+					nbTypesUnit+=1;
 				}
-				if (unit.type=="trooper"){
-					unit["y"]=unit["y"]+4;
-					drawTieFighter(unit);
-					drawTrooper(unit);
-					drawHealthBar(unit);
-					animationTrooper(unit);
+				if (Math.floor(time)==190){
+					testVador=true;
+					changeFreqTest=true;
+					clearInterval(popUpControl2000)
 				}
-				if (unit.type=="droid"){
-					unit["y"]=unit["y"]+5;
-					drawMultiTroop(unit);
-					drawDroid(unit);
-					drawHealthBar(unit);
-					animationDroid(unit);
+				//popUpTroopers au bout de 30s de jeu
+				if (choix ==2 && testTroopers){
+					var xTrooper=Math.floor(Math.random() * 500)+50;
+					var yTrooper=Math.floor(Math.random() * 50)+50;
+					var troop=new Trooper(xTrooper,yTrooper);
+					units.push(troop);
+					drawTieFighter(troop);
+					drawTrooper(troop);
+					drawHealthBar(troop);
+					setTimeout(function(){
+						troop["imTieFighter"].src="beton.png";
+					},2000);
 				}
-			})
-			drawIce();
-			drawUnits(units);
-			display(score);
-			console.log(units);
-		},100);
-	//},2000);
+				
+				//popUpJedis au bout de 1min40s=100s de jeu
+				if (choix==3 && testJedis){
+					var xJedi=Math.floor(Math.random() * 500)+50;
+					var yJedi=Math.floor(Math.random() * 50)+50;
+					var jedi=new Jedi(xJedi,yJedi);
+					units.push(jedi);
+					drawXwing(jedi);
+					drawJedi(jedi);
+					drawHealthBar(jedi);
+					setTimeout(function(){
+						jedi["imXwing"].src="beton.png";
+					},2000);
+				}
+
+				//popUpVador au bout de 2min20=140s de jeu
+				if (testVador){
+					var xVador=Math.floor(Math.random() * 500)+50;
+					var yVador=Math.floor(Math.random() * 50)+50;
+					var vador=new Vador(xVador,yVador);
+					units.push(vador);
+					drawDestroyer(vador);
+					drawVador(vador);
+					drawHealthBar(vador);
+					setTimeout(function(){
+						vador["imDestroyer"].src="beton.png";
+					},5000);
+					testVador=false;
+				}
+				//popUpDroids
+				if (choix==1){
+					var xDroid=Math.floor(Math.random() * 510)+30;
+					var yDroid=Math.floor(Math.random() * 70)+30;
+					var droid=new Droid(xDroid,yDroid);
+					units.push(droid);
+					drawMultiTroop(droid);
+					drawDroid(droid);
+					drawHealthBar(droid);
+					setTimeout(function(){
+						droid["imMultiTroop"].src="beton.png";
+					},1500);
+				}
+			}, 1000)
+		}
+		
+
+		units.forEach(function(unit){
+			if (unit.type=="vador"){
+				unit["y"]=unit["y"]+1;
+				drawDestroyer(unit);
+				drawVador(unit);
+				drawHealthBar(unit);
+				animationVador(unit);
+			}
+			if (unit.type=="jedi"){
+				unit["y"]=unit["y"]+3;
+				drawXwing(unit);
+				drawJedi(unit);
+				drawHealthBar(unit);
+				animationJedi(unit);
+			}
+			if (unit.type=="trooper"){
+				unit["y"]=unit["y"]+4;
+				drawTieFighter(unit);
+				drawTrooper(unit);
+				drawHealthBar(unit);
+				animationTrooper(unit);
+			}
+			if (unit.type=="droid"){
+				unit["y"]=unit["y"]+5;
+				drawMultiTroop(unit);
+				drawDroid(unit);
+				drawHealthBar(unit);
+				animationDroid(unit);
+			}
+		})
+		time=time-0.1;
+		drawIce();
+		drawUnits(units);
+		display(); 
+	},100);
 	return units;
 }
 
@@ -267,6 +378,7 @@ document.onclick = position;
 
 // Retourne la position du curseur au clic et appelle la fonction "collision()"
 function position (evt) {
+	soundBlaster.play();
 	var XYrect = canvas.getBoundingClientRect(); 
   	if (navigator.appName=="Microsoft Internet Explorer") {
 		Xcurseur = evt.x + document.body.scrollLeft - XYrect.left;
@@ -298,7 +410,18 @@ function collision(Xcurseur, Ycurseur, units){
 
 //Création d'une barre de vie
 var drawHealthBar = function(unit){
-	context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]+5,40,4);
+	if (unit.type=="trooper"){
+		context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]-5 ,70,4);
+	}
+	if (unit.type=="droid"){
+		context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]-5 ,33,4);
+	}
+	if (unit.type=="vador"){
+		context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]-5 ,70,4);
+	}
+	if (unit.type=="jedi"){
+		context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]-5 ,70,4);
+	}
 }
 
 // Change la barre de vie suivant la vie restante du personnage
@@ -358,7 +481,7 @@ function deleteUnit(units){
 					}
 				}
 			}
-	},2500);
+	},100);
 	return units;
 }
 
@@ -376,6 +499,8 @@ function death(units,i){
 	}
 	if(units[i]["type"] == "vador"){
 		score += 30;
+		vadorTheme.pause();
+		firstSong.play();
 	}
 	units.splice(i,1);
 }
@@ -386,17 +511,22 @@ function death(units,i){
 //------------------------------------------------------------------------------------------------------------
 
 
-
+//Variable globale
+var time=200;
 // Affichage du score, de la vie et du temps
-function display(score){
+function display(){
 	context.fillStyle = "white";
 	context.font = "bold 15px Calibri,Geneva,Arial";
 	context.fillText("Score : " , 5 , 15);
 	context.fillText( +score , 60 , 15);
 	context.fillText("Life : " , 245 , 15);
 	context.fillText(+life , 280 , 15);
-	context.fillText("Time : ", 500 , 15);
+	context.fillText("Time : ", 520 , 15);
+	context.fillText(+time, 565 , 15);
+	context.fillText("Press Space to pause", 5 , 790);
 }
+
+
 
 
 //------------------------------------------------------------------------------------------------------------
@@ -405,16 +535,19 @@ function display(score){
 
 // Fonction qui gère la défaite
 function loose(){
-	canvas = document.getElementById("cv").style.opacity = "0.3";
 	stop();
-	context.fillStyle = "white";
-	context.font = "bold 40px Calibri,Geneva,Arial";
-	context.fillText("Etre un perdant," , 50 , 200);
-	context.fillText("c'est pas le plus difficile." , 50 , 250);
-	context.fillText("Ce qui compte, " , 50, 300);
-	context.fillText("c'est le style de votre défaite." , 50 , 350);
-	context.fillText("Score : " , 50 , 400);
-	context.fillText( +score , 200 , 400);
+	vadorTheme.pause();
+	firstSong.pause();
+	defeatSong1.play();
+	setTimeout(function(){
+		defeatSong1.pause();
+		defeatSong2.play();
+		defeatSong2.loop=true;
+	},3000);  
+	context.drawImage(youLoose, 0,0,600,800);
+	context.fillText("Score : " , 5 , 15);
+	context.fillText( +score , 60 , 15);
+	oneGame=false;
 }
 
 
@@ -426,23 +559,51 @@ function loose(){
 
 // A FINIR
 // On met p à 1 pour dire que le jeu fonctionne. Pour p = 0 il est en pause.
+
 var p = 1;
-var pause = document.addEventListener('keypress', function(event) {
-	if(event.key == "spacebar" && p != 0){
+var keyPressed = document.addEventListener('keypress', (event) => {
+	if(event.which == 32 && p == 1){ //32=space
 		p = 0;
-		//stop();
-	}else if(event.key == "spacebar" && p == 0){
+		canvas = document.getElementById("cv").style.opacity = "0.3";
+		firstSong.pause();
+		vadorTheme.pause();
+		defeatSong2.pause();
+		stop();
+	}else if(event.which == 32 && p == 0){
 		p = 1;
+		canvas = document.getElementById("cv").style.opacity = "1";
+		var testPresenceVador=false;
+		for (var i=0;i<unitsList.length;i++){
+			if (unitsList[i].type="vador"){
+				testPresenceVador=true
+			}
+		}
+		if (testPresenceVador){
+			vadorTheme.play()
+		}
+		else{
+			firstSong.play();
+		}
+		console.log("reprise")
+	}
+	else if(event.which==114 && oneGame==false){
+		init();
+		startGame();
 	}
 
 })
 
+
+
 //Fonction qui stoppe les setinterval
 function stop(){
-	clearInterval(popUpDroids);
-	clearInterval(popUpTroopers);
-	clearInterval(popUpJedis);
 	clearInterval(popUpUnits);
+	if (time<=60){
+		clearInterval(popUpControl1000);
+	}
+	if (time>60){
+		clearInterval(popUpControl2000);
+	}
 }
 
 
@@ -477,6 +638,7 @@ function Trooper (x, y){
 	this.x=x;
 	this.y=y;
 	this.sx=0;
+	this.sy=0;
 	this.tieFighterX=x;
 	this.tieFighterY=y;
 	this.hp=2;
@@ -507,7 +669,7 @@ function Vador (x, y){
 	this.x=x;
 	this.y=y;
 	this.sx=0;
-	this.sy=300;
+	this.sy=0;
 	this.destroyerX=x;
 	this.destroyerY=y;
 	this.hp=25;
@@ -539,7 +701,7 @@ function Jedi (x, y){
 	this.x=x;
 	this.y=y;
 	this.sx=0;
-	this.sy=380;
+	this.sy=0;
 	this.xwingX=x;
 	this.xwingY=y;
 	this.hp=3;
@@ -579,23 +741,74 @@ function Droid (x, y){
 }
 
 
+//------------------SONS------------
+
+var soundBlaster = new Audio("blaster.mp3");
+var defeatSong1= new Audio("defeatSong1.mp3");
+var defeatSong2= new Audio("defeatSong2.mp3");
+var firstSong=new Audio("firstSong.mp3");
+var vadorTheme= new Audio("vadorTheme.mp3");
+var menuSong= new Audio("accueil.mp3");
+
+//------------------MENU----------
+function menu(){
+	menuSong.play();
+	menuSong.loop=true;
+ 	context.drawImage(accueil,0,0,600,800);
+ 	var start = document.addEventListener('keypress', (event) => {
+ 		console.log(event.which);
+		if(event.which == 13 && oneGame==false){
+			oneGame=true;
+			startGame();
+		}
+	})
+}
+
+function init(){
+
+	testTroopers=false;
+	testJedis=false;
+	testVador=false;
+	nbTypesUnit=1;
+	nbTypesUnitTestTroopers=false;
+	nbTypesUnitTestJedis=false;
+	changeFreqTest=false;
+
+	life = 10;
+	score=0;
+	time=200;
+}
+
 //------------------------------------------------------------------------------------------------------------
 //------------------------------------------------DEBUT DU JEU------------------------------------------------
 //------------------------------------------------------------------------------------------------------------
 
 // Déclaration de l'image du sol
-var ice=new Image();
-	ice.src="ice.jpg";
+var beton = new Image();
+beton.src="beton.png";
+//declaration image d'accueil
+var accueil= new Image();
+accueil.src="accueil.jpg";
+
+//declaration image youLoose
+var youLoose= new Image();
+youLoose.src="youLoose.png";
+//var de test pour lancer qu'un seul jeu a la fois
+var oneGame=false;
 
 // Démarrage du jeu après 0,5s pour prendre le temps de charger les images
 setTimeout(function(){
-	startGame();
+	menu();
 	}, 500);
 
 // Fonction principale du jeu
 function startGame(){
+	menuSong.pause();
+	defeatSong1.pause();
+	defeatSong2.pause();
 	drawIce();
-	unitsList = [];
-	unitsList = popUp(unitsList);
-	unitsList = deleteUnit(unitsList);
+	unitsList=[];
+	init();
+	unitsList=popUp(unitsList);
+	unitsist=deleteUnit(unitsList);
 }

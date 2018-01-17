@@ -399,7 +399,7 @@ function position(evt) {
 function collision(Xcurseur, Ycurseur, units){
 	for(var i = 0; i < units.length ; i++){
 		// Le clic est centré donc il faut rajouter le centrage dans les conditions
-		if ((units[i].x <= Xcurseur + 30) && (units[i].x >= Xcurseur - 30) && (units[i].y <= Ycurseur + 5) && (units[i].y >= Ycurseur - 35)){
+		if ((units[i].x <= Xcurseur) && (units[i].x >= Xcurseur - 60) && (units[i].y <= Ycurseur + 5) && (units[i].y >= Ycurseur - 35)){
 			blood(units,i);
 			healthBarControl(units,i);
 		}
@@ -553,8 +553,6 @@ function display(){
 }
 
 
-
-
 //------------------------------------------------------------------------------------------------------------
 //---------------------------------Gestion de la victoire et de la défaite------------------------------------
 //------------------------------------------------------------------------------------------------------------
@@ -589,12 +587,9 @@ function win(){
 }
 
 
-
-
 //------------------------------------------------------------------------------------------------------------
-//-----------------------------------------Mettre le jeu en pause---------------------------------------------
+//-----------------------------------------Arrêter le jeu à la fin--------------------------------------------
 //------------------------------------------------------------------------------------------------------------
-
 
 
 //Fonction qui stoppe les setinterval
@@ -629,7 +624,6 @@ function played(){
 	collision(Xcurseur,Ycurseur,unitsList);
 };
 }
-
 
 
 //------------------------------------------------------------------------------------------------------------

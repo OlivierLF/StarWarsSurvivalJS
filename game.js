@@ -250,8 +250,6 @@ var popUp = function(units){
 			popUpControl1000=setInterval(function(){
 				var choix = Math.floor((Math.random() * nbTypesUnit) + 1);
 				console.log("time " + time);
-				//console.log("math.floor"+Math.floor(time));
-				//console.log("nbtype "+nbTypesUnit);
 				console.log(choix);
 				if (Math.floor(time)==198){
 					testTroopers=true;
@@ -266,7 +264,7 @@ var popUp = function(units){
 					changeFreqTest=true;
 					clearInterval(popUpControl2000)
 				}
-				//popUpTroopers au bout de 30s de jeu
+				//popUpTroopers 
 				if (choix ==2 && testTroopers){
 					var xTrooper=Math.floor(Math.random() * 500)+50;
 					var yTrooper=Math.floor(Math.random() * 50)+50;
@@ -280,7 +278,7 @@ var popUp = function(units){
 					},2000);
 				}
 				
-				//popUpJedis au bout de 1min40s=100s de jeu
+				//popUpJedis 
 				if (choix==3 && testJedis){
 					var xJedi=Math.floor(Math.random() * 500)+50;
 					var yJedi=Math.floor(Math.random() * 50)+50;
@@ -294,7 +292,7 @@ var popUp = function(units){
 					},2000);
 				}
 
-				//popUpVador au bout de 2min20=140s de jeu
+				//popUpVador 
 				if (testVador){
 					var xVador=Math.floor(Math.random() * 500)+50;
 					var yVador=Math.floor(Math.random() * 50)+50;
@@ -402,8 +400,8 @@ function collision(Xcurseur, Ycurseur, units){
 	for(var i = 0; i < units.length ; i++){
 		// Le clic est centré donc il faut rajouter le centrage dans les conditions
 		if ((units[i].x <= Xcurseur + 30) && (units[i].x >= Xcurseur - 30) && (units[i].y <= Ycurseur + 5) && (units[i].y >= Ycurseur - 35)){
-			healthBarControl(units,i);
 			blood(units,i);
+			healthBarControl(units,i);
 		}
 		if (i == units.length) i = 0;
 	}
@@ -411,17 +409,23 @@ function collision(Xcurseur, Ycurseur, units){
 
 //Met les personnages en rouge
 function blood(units,i){
-	if(units[i]["type"] == "droid"){
-		units[i]["imDroid"].src = "droidRed.png"
-	}
 	if(units[i]["type"] == "trooper"){
 		units[i]["imTrooper"].src = "trooperRed.png";
+		setTimeout(function(){
+			units[i]["imTrooper"].src = "trooper.png";
+		},100);
 	}
 	if(units[i]["type"] == "jedi"){
 		units[i]["imJedi"].src = "jediRed.png";
+		setTimeout(function(){
+			units[i]["imJedi"].src = "jedi.png";
+		},100);
 	}
 	if(units[i]["type"] == "vador"){
 		units[i]["imVador"].src = "vadorRed.png";
+		setTimeout(function(){
+			units[i]["imVador"].src = "vador.png";
+		},100);
 	}
 }
 
@@ -546,7 +550,6 @@ function display(){
 	context.fillText(+life , 280 , 15);
 	context.fillText("Time : ", 520 , 15);
 	context.fillText(+time, 565 , 15);
-	context.fillText("Press Space to pause", 5 , 790);
 }
 
 

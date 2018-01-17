@@ -325,21 +325,21 @@ var popUp = function(units){
 
 		units.forEach(function(unit){
 			if (unit.type=="vador"){
-				unit["y"]=unit["y"]+1;
+				unit["y"]=unit["y"]+2;
 				drawDestroyer(unit);
 				drawVador(unit);
 				drawHealthBar(unit);
 				animationVador(unit);
 			}
 			if (unit.type=="jedi"){
-				unit["y"]=unit["y"]+3;
+				unit["y"]=unit["y"]+4;
 				drawXwing(unit);
 				drawJedi(unit);
 				drawHealthBar(unit);
 				animationJedi(unit);
 			}
 			if (unit.type=="trooper"){
-				unit["y"]=unit["y"]+4;
+				unit["y"]=unit["y"]+6;
 				drawTieFighter(unit);
 				drawTrooper(unit);
 				drawHealthBar(unit);

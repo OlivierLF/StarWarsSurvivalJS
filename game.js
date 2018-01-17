@@ -176,7 +176,7 @@ var popUp = function(units){
 			testVador=true;
 			nbTypesUnitTest=true;
 			changeFreqTest=true;
-			clearInterval(popUpControl2000)
+			clearInterval(popUpControl2000);
 		}
 		//popUpTroopers au bout de 30s de jeu
 		if (choix ==2 && testTroopers){
@@ -378,7 +378,7 @@ var Ycurseur = 0;
 document.onclick = position;
 
 // Retourne la position du curseur au clic et appelle la fonction "collision()"
-function position (evt) {
+function position(evt) {
 
 	if (soundBlaster.currentTime!=0){
 		soundBlaster.currentTime=0;
@@ -401,12 +401,29 @@ function position (evt) {
 function collision(Xcurseur, Ycurseur, units){
 	for(var i = 0; i < units.length ; i++){
 		// Le clic est centré donc il faut rajouter le centrage dans les conditions
-		if ((units[i].x <= Xcurseur + 20) && (units[i].x >= Xcurseur - 40) && (units[i].y <= Ycurseur) && (units[i].y >= Ycurseur - 65)){
+		if ((units[i].x <= Xcurseur + 30) && (units[i].x >= Xcurseur - 30) && (units[i].y <= Ycurseur + 5) && (units[i].y >= Ycurseur - 35)){
 			healthBarControl(units,i);
+			blood(units,i);
 		}
 		if (i == units.length) i = 0;
 	}
 };
+
+//Met les personnages en rouge
+function blood(units,i){
+	if(units[i]["type"] == "droid"){
+		units[i]["imDroid"].src = "droidRed.png"
+	}
+	if(units[i]["type"] == "trooper"){
+		units[i]["imTrooper"].src = "trooperRed.png";
+	}
+	if(units[i]["type"] == "jedi"){
+		units[i]["imJedi"].src = "jediRed.png";
+	}
+	if(units[i]["type"] == "vador"){
+		units[i]["imVador"].src = "vadorRed.png";
+	}
+}
 
 
 //------------------------------------------------------------------------------------------------------------
@@ -415,16 +432,16 @@ function collision(Xcurseur, Ycurseur, units){
 
 //Création d'une barre de vie
 var drawHealthBar = function(unit){
-	if (unit.type=="trooper"){
+	if (unit.type == "trooper"){
 		context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]-5 ,70,4);
 	}
-	if (unit.type=="droid"){
+	if (unit.type == "droid"){
 		context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]-5 ,33,4);
 	}
-	if (unit.type=="vador"){
+	if (unit.type == "vador"){
 		context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]-5 ,70,4);
 	}
-	if (unit.type=="jedi"){
+	if (unit.type == "jedi"){
 		context.drawImage(unit["imHealthBar"],0,0,153,27,unit["x"],unit["y"]-5 ,70,4);
 	}
 }
@@ -438,29 +455,29 @@ function healthBarControl(units,i){
 	if(units[i]["type"] == "trooper")
 	{
 		if(units[i]["hp"] == 1){
-			units[i]["imHealthBar"].src="healthMid.png";
+			units[i]["imHealthBar"].src = "healthMid.png";
 		}
 	}
 	if(units[i]["type"] == "jedi"){
 		if(units[i]["hp"] == 2){
-			units[i]["imHealthBar"].src="health2Thirds.png";
+			units[i]["imHealthBar"].src = "health2Thirds.png";
 		}
 		if(units[i]["hp"] == 1){
-			units[i]["imHealthBar"].src="healthQuarter.png";
+			units[i]["imHealthBar"].src = "healthQuarter.png";
 		}
 	}
 	if(units[i]["type"] == "vador"){
 		if(units[i]["hp"] == 24){
-			units[i]["imHealthBar"].src="health3Quarters.png";
+			units[i]["imHealthBar"].src = "health3Quarters.png";
 		}
 		if(units[i]["hp"] == 20){
-			units[i]["imHealthBar"].src="health2Thirds.png";
+			units[i]["imHealthBar"].src = "health2Thirds.png";
 		}
 		if(units[i]["hp"] == 13){
-			units[i]["imHealthBar"].src="healthMid.png";
+			units[i]["imHealthBar"].src = "healthMid.png";
 		}
 		if(units[i]["hp"] == 5){
-			units[i]["imHealthBar"].src="healthQuarter.png";
+			units[i]["imHealthBar"].src = "healthQuarter.png";
 		}
 	}
 }
@@ -471,7 +488,7 @@ function healthBarControl(units,i){
 //------------------------------------------------------------------------------------------------------------
 
 // Variable globale
-var life = 1;
+var life = 10;
 
 // Fonction qui permet de supprimer les troupes lorsqu'elles ont dépassé le canvas
 function deleteUnit(units){
@@ -480,7 +497,7 @@ function deleteUnit(units){
 		for (i;i<units.length;i++){
 			if (units[i].y>800){
 					units.splice(i,1);
-					//life -= 1;
+					life -= 1;
 					if (life == 0){
 						loose();
 					}
@@ -575,44 +592,6 @@ function win(){
 //-----------------------------------------Mettre le jeu en pause---------------------------------------------
 //------------------------------------------------------------------------------------------------------------
 
-// A FINIR
-// On met p à 1 pour dire que le jeu fonctionne. Pour p = 0 il est en pause.
-
-var p = 1;
-var keyPressed = document.addEventListener('keypress', (event) => {
-	if(event.which == 32 && p == 1){ //32=space
-		p = 0;
-		canvas = document.getElementById("cv").style.opacity = "0.3";
-		firstSong.pause();
-		vadorTheme.pause();
-		defeatSong2.pause();
-		stop();
-	}else if(event.which == 32 && p == 0){
-		p = 1;
-		canvas = document.getElementById("cv").style.opacity = "1";
-		var testPresenceVador=false;
-		for (var i=0;i<unitsList.length;i++){
-			if (unitsList[i].type="vador"){
-				testPresenceVador=true
-			}
-		}
-		if (testPresenceVador){
-			vadorTheme.play()
-		}
-		else{
-			firstSong.play();
-		}
-		console.log("reprise")
-	}
-	else if(event.which == 13 && oneGame==false){
-			oneGame=true;
-			init();
-			startGame();
-		}
-
-
-})
-
 
 
 //Fonction qui stoppe les setinterval
@@ -627,6 +606,26 @@ function stop(){
 	}
 }
 
+function played(){
+	setInterval(popUp(unitsList));
+	function position(evt) {
+
+	if (soundBlaster.currentTime!=0){
+		soundBlaster.currentTime=0;
+	}
+	soundBlaster.play();
+	var XYrect = canvas.getBoundingClientRect(); 
+  	if (navigator.appName=="Microsoft Internet Explorer") {
+		Xcurseur = evt.x + document.body.scrollLeft - XYrect.left;
+  		Ycurseur = evt.y + document.body.scrollTop - XYrect.top;
+  	}else {
+		if(!evt) evt = window.event;    
+		Xcurseur = evt.clientX - XYrect.left;
+   		Ycurseur = evt.clientY - XYrect.top;
+	}
+	collision(Xcurseur,Ycurseur,unitsList);
+};
+}
 
 
 
@@ -797,9 +796,9 @@ function init(){
 	nbTypesUnitTestJedis=false;
 	changeFreqTest=false;
 
-	life = 1;
-	score=0;
-	time=200;
+	life = 10;
+	score = 0;
+	time = 200;
 }
 
 //------------------------------------------------------------------------------------------------------------

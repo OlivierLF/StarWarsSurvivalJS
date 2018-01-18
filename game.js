@@ -503,7 +503,7 @@ function deleteUnit(units){
 					units.splice(i,1);
 					life -= 1;
 					if (life == 0){
-						loose();
+						lose();
 					}
 				}
 			}
@@ -558,7 +558,7 @@ function display(){
 //------------------------------------------------------------------------------------------------------------
 
 // Fonction qui gère la défaite
-function loose(){
+function lose(){
 	stop();
 	vadorTheme.pause();
 	firstSong.pause();
@@ -567,7 +567,7 @@ function loose(){
 		defeatSong2.play();
 		defeatSong2.loop=true;
 	},3000);  
-	context.drawImage(youLoose, 0,0,600,800);
+	context.drawImage(youLose, 0,0,600,800);
 	context.fillText("Score : " , 5 , 15);
 	context.fillText( +score , 60 , 15);
 	oneGame=false;
@@ -809,10 +809,10 @@ beton.src="beton.png";
 var accueil= new Image();
 accueil.src="accueil.jpg";
 
-//declaration image youLoose
-var youLoose= new Image();
-youLoose.src="youLoose.png";
-//declaration image youLoose
+//declaration image youLose
+var youLose= new Image();
+youLose.src="youLose.png";
+//declaration image youLose
 var youWin= new Image();
 youWin.src="youWin.jpg";
 //var de test pour lancer qu'un seul jeu a la fois

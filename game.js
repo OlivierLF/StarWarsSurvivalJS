@@ -81,7 +81,7 @@ var drawTieFighter = function(trooper){
 	context.drawImage(trooper["imTieFighter"],0,0,810,984,trooper["tieFighterX"],trooper["tieFighterY"]-20,120,120);
 };
 
-// Affiche le tieFighter associé au trooper passé en paramètre aux coordonnées
+// Affiche le Destroyer associé à Vador passé en paramètre aux coordonnées
 // qui lui sont propres lors de sa déclaration
 var drawDestroyer = function(vador){
 	context.drawImage(vador["imDestroyer"],0,0,640,453,vador["destroyerX"],vador["destroyerY"]-80,150,150);
@@ -154,14 +154,13 @@ var nbTypesUnitTestJedis=false;
 var changeFreqTest=false;
 
 var popUp = function(units){
+	if (firstSong.currentTime!=0){
+		firstSong.currentTime=0;
+	}
 	firstSong.play();
 	firstSong.loop=true;
 	popUpControl2000=setInterval(function(){
 		var choix = Math.floor((Math.random() * nbTypesUnit) + 1); //nb random entre 1 et 3
-		console.log("time " + time);
-		//console.log("math.floor"+Math.floor(time));
-		console.log("nbtype "+nbTypesUnit);
-		console.log(choix);
 		if (Math.floor(time)<=170 && nbTypesUnitTestTroopers==false){
 			testTroopers=true;
 			nbTypesUnit+=1;
@@ -216,6 +215,9 @@ var popUp = function(units){
 			drawVador(vador);
 			drawHealthBar(vador);
 			firstSong.pause();
+			if (vadorTheme.currentTime!=0){
+				vadorTheme.currentTime=0;
+			}
 			vadorTheme.play();
 			setTimeout(function(){
 				vador["imDestroyer"].src="beton.png";
@@ -243,14 +245,12 @@ var popUp = function(units){
 	//refresh toutes les 0.1s
 	popUpUnits = setInterval(function(){
 		
-		//si le changement de frequence est fait
+		//si le changement de frequence est fait :
 		if (changeFreqTest){
 			changeFreqTest=false;
 			clearInterval(popUpControl2000);
 			popUpControl1000=setInterval(function(){
 				var choix = Math.floor((Math.random() * nbTypesUnit) + 1);
-				console.log("time " + time);
-				console.log(choix);
 				if (Math.floor(time)==198){
 					testTroopers=true;
 					nbTypesUnit+=1;
@@ -398,8 +398,7 @@ function position(evt) {
 // y a une collision.
 function collision(Xcurseur, Ycurseur, units){
 	for(var i = 0; i < units.length ; i++){
-		// Le clic est centré donc il faut rajouter le centrage dans les conditions
-		if ((units[i].x <= Xcurseur) && (units[i].x >= Xcurseur - 60) && (units[i].y <= Ycurseur + 5) && (units[i].y >= Ycurseur - 35)){
+		if ((units[i].x <= Xcurseur +10) && (units[i].x >= Xcurseur - 55) && (units[i].y <= Ycurseur +15 ) && (units[i].y >= Ycurseur-75)){
 			blood(units,i);
 			healthBarControl(units,i);
 		}
@@ -500,19 +499,25 @@ function deleteUnit(units){
 		var i=0;
 		for (i;i<units.length;i++){
 			if (units[i].y>800){
-					units.splice(i,1);
-					life -= 1;
-					if (life == 0){
-						lose();
-					}
+				if(units[i]["type"] == "vador"){
+					vadorTheme.pause();
+					vadorTheme.currentTime=0;
+					firstSong.play();
+				}
+				units.splice(i,1);
+				life -= 1;
+				if (life == 0){
+					lose();
 				}
 			}
+		}
 	},100);
 	return units;
 }
 
-// Gestion du score en fonction des personnages éliminés
+// Gestion du score en fonction des personnages éliminés / Variable globale
 var score = 0;
+
 function death(units,i){
 	if(units[i]["type"] == "droid"){
 		score += 1;
@@ -562,10 +567,19 @@ function lose(){
 	stop();
 	vadorTheme.pause();
 	firstSong.pause();
+	if (defeatSong1.currentTime!=0){
+		defeatSong1.currentTime=0;
+	}
 	defeatSong1.play();
 	setTimeout(function(){
-		defeatSong2.play();
-		defeatSong2.loop=true;
+		if (defeatSong2.currentTime!=0){
+			defeatSong2.currentTime=0;
+		}
+		if (oneGame!=true){
+			defeatSong2.play();
+			defeatSong2.loop=true;
+		}
+		
 	},3000);  
 	context.drawImage(youLose, 0,0,600,800);
 	context.fillText("Score : " , 5 , 15);
@@ -579,6 +593,9 @@ function win(){
 	time=0;
 	vadorTheme.pause();
 	firstSong.pause();
+	if (winSong.currentTime!=0){
+		winSong.currentTime=0;
+	}
 	winSong.play();
 	context.drawImage(youWin, 0,0,369,532,0,0,600,800);
 	context.fillText("Score : " , 5 , 15);
@@ -758,8 +775,9 @@ function Droid (x, y){
 }
 
 
-//------------------SONS------------
-
+//------------------------------------------------------------------------------------------------------------
+//----------------------------------------SONS----------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------
 var soundBlaster = new Audio("blaster.mp3");
 var defeatSong1= new Audio("defeatSong1.mp3");
 var defeatSong2= new Audio("defeatSong2.mp3");
@@ -768,13 +786,14 @@ var vadorTheme= new Audio("vadorTheme.mp3");
 var menuSong= new Audio("accueil.mp3");
 var winSong= new Audio("cantina.mp3");
 
-//------------------MENU----------
+//------------------------------------------------------------------------------------------------------------
+//----------------------------------------MENU----------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------
 function menu(){
 	menuSong.play();
 	menuSong.loop=true;
  	context.drawImage(accueil,0,0,600,800);
  	var start = document.addEventListener('keypress', (event) => {
- 		console.log(event.which);
 		if(event.which == 13 && oneGame==false){
 			oneGame=true;
 			init();
